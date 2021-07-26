@@ -8,7 +8,7 @@ plugins {
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
-group = 'io.izzel.example'
+group = 'vip.bingzi'
 version = '1.0.0'
 
 taboolib {
