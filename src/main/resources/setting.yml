@@ -1,0 +1,31 @@
+# 数据库
+Database:
+  # 可以填入以下选项
+  # 1.SQLite  -   本地存储[!警告! 此种方法会导致性能低下]
+  # 2.MongoDB -   一种便捷快速的存储方式
+  # 3.MYSQL   -   常见的存储方式
+  # 4.Yaml    -   常见的存储方式
+  Type: SQLite
+  # 在Type为ONLINE的时候生效
+  Url:
+    # MongoDB & MySQL链接地址
+    Client: "mongodb+srv://账户:密码@链接地址/数据库?参数"
+    # MySQL 链接账户
+    Account: "root"
+    # MySQL 链接密码
+    Password: "root"
+    # 数据库名字
+    Database: "MagicalGlobalMarket"
+# 设置
+Settings:
+  # 整体日志等级(不包括预加载阶段)
+  # 可选项目
+  # VERBOSE   ->    详细[稳定版不提供]
+  # FINEST    ->    最好的[稳定版不提供]
+  # FINE      ->    精细[稳定版不提供]
+  # INFO      ->    信息
+  # WARN      ->    警告
+  # ERROR     ->    错误
+  # FATAL     ->    致命
+  # []        ->    默认【INFO】
+  Logger: INFO

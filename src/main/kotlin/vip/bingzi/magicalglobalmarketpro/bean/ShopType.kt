@@ -1,4 +1,4 @@
-package vip.bingzi.bean
+package vip.bingzi.magicalglobalmarketpro.bean
 
 enum class ShopType {
     // 卖

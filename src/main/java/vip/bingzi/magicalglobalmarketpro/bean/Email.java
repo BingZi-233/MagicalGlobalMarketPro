@@ -1,15 +1,31 @@
-package vip.bingzi.bean;
+package vip.bingzi.magicalglobalmarketpro.bean;
 
+import io.izzel.taboolib.kotlin.Serializer;
+import io.izzel.taboolib.module.config.TConfig;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import vip.bingzi.util.ToolsKt;
+import vip.bingzi.magicalglobalmarketpro.MagicalGlobalMarketPro;
+import vip.bingzi.magicalglobalmarketpro.util.ToolsKt;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
+/**
+ * 邮件构建
+ */
 public class Email implements Serializable {
+    private TConfig config = MagicalGlobalMarketPro.INSTANCE.getSetting();
     private Player player;
     private ArrayList<ItemStack> arrayList;
+
+    {
+        List<String> stringList = config.getStringList(player.getName() + ".Email");
+        for (String s : stringList) {
+            arrayList.add(Serializer.INSTANCE.toItemStack(s));
+        }
+        ToolsKt.getLogger().verbose("已经导入玩家" + player.getName() + "的邮件，共计" + arrayList.size() + "个");
+    }
 
     public Email() {
         this(null);
@@ -21,7 +37,7 @@ public class Email implements Serializable {
 
     @Override
     public String toString() {
-        return "玩家: " + player.getName() + " 右键数量:" + arrayList.size();
+        return "玩家: " + player.getName() + " 邮件数量:" + arrayList.size();
     }
 
     @Override

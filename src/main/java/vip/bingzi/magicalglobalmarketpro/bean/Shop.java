@@ -1,6 +1,8 @@
-package vip.bingzi.bean;
+package vip.bingzi.magicalglobalmarketpro.bean;
 
+import io.izzel.taboolib.kotlin.Serializer;
 import io.izzel.taboolib.kotlin.blockdb.Data;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -17,34 +19,39 @@ public class Shop implements Serializable {
     // 时间
     private Long time;
     // 物品
-    private ItemStack itemStack;
+    private String itemStack;
     // 价格
     private double price;
     // 玩家
-    private Player player;
+    private String player;
 
     public Shop() {
         this(ShopType.None, 0L, null, 0, null);
     }
 
-    public Shop(ShopType shopType, Long time, ItemStack itemStack, double price, Player player) {
+    public Shop(ShopType shopType, Long time, ItemStack itemStack, double price, String player) {
         this.shopType = shopType;
         this.time = time;
-        this.itemStack = itemStack;
+        this.itemStack = Serializer.INSTANCE.fromItemStack(itemStack);
         this.price = price;
         this.player = player;
     }
 
     @Override
     public String toString() {
+        Player playerEntity = Bukkit.getPlayer(this.player);
+        String playerName = player;
+        if (playerEntity != null) {
+            playerName = playerEntity.getName();
+        }
         return "类型:" +
                 shopType +
                 " 上架时间:" +
                 new Data(time) +
                 " 上架物品类型:" +
-                itemStack.getType() +
+                Serializer.INSTANCE.toItemStack(itemStack).getType() +
                 " 上架玩家:" +
-                player.getName();
+                playerName;
     }
 
     @Override
@@ -92,11 +99,11 @@ public class Shop implements Serializable {
     }
 
     public ItemStack getItemStack() {
-        return itemStack;
+        return Serializer.INSTANCE.toItemStack(itemStack);
     }
 
     public void setItemStack(ItemStack itemStack) {
-        this.itemStack = itemStack;
+        this.itemStack = Serializer.INSTANCE.fromItemStack(itemStack);
     }
 
     public double getPrice() {
@@ -107,11 +114,11 @@ public class Shop implements Serializable {
         this.price = price;
     }
 
-    public Player getPlayer() {
+    public String getPlayer() {
         return player;
     }
 
-    public void setPlayer(Player player) {
+    public void setPlayer(String player) {
         this.player = player;
     }
 }
