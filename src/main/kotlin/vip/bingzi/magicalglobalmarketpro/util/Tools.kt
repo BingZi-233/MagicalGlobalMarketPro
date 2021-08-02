@@ -5,10 +5,13 @@ import io.izzel.taboolib.module.config.TConfig
 import io.izzel.taboolib.module.locale.TLocale
 import io.izzel.taboolib.module.locale.logger.TLogger
 import io.izzel.taboolib.module.locale.logger.TLoggerManager
+import org.bukkit.entity.Player
 import org.bukkit.util.io.BukkitObjectInputStream
 import org.bukkit.util.io.BukkitObjectOutputStream
 import vip.bingzi.magicalglobalmarketpro.MagicalGlobalMarketPro
+import vip.bingzi.magicalglobalmarketpro.bean.Email
 import vip.bingzi.magicalglobalmarketpro.bean.Shop
+import vip.bingzi.magicalglobalmarketpro.money.Economy
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.util.*
@@ -19,6 +22,9 @@ val logger: TLogger = TLoggerManager.getLogger(plugin)
 val setting: TConfig = MagicalGlobalMarketPro.setting
 val view: TConfig = MagicalGlobalMarketPro.view
 val data: TConfig = MagicalGlobalMarketPro.data
+var economy: Economy? = null
+val email: MutableSet<Email> = mutableSetOf()
+val shop: MutableList<Shop> = mutableListOf()
 
 fun toShop(data: String): Shop {
     ByteArrayInputStream(Base64.getDecoder().decode(data)).use { byteArrayInputStream ->
@@ -39,4 +45,13 @@ fun fromShop(shop: Shop): String {
 
 fun asStringColored(string: String): String {
     return TLocale.asString(string).replace("&", "§")
+}
+
+fun getPlayerEmail(player: Player): Email? {
+    email.forEach { email ->
+        if (email.player.equals(player)) {
+            return email
+        }
+    }
+    return null
 }

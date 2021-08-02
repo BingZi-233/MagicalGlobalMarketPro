@@ -2,15 +2,14 @@ package vip.bingzi.magicalglobalmarketpro.view.viewimpt
 
 import io.izzel.taboolib.util.item.inventory.ClickEvent
 import io.izzel.taboolib.util.item.inventory.linked.MenuLinked
+import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
+import vip.bingzi.magicalglobalmarketpro.bean.Email
 import vip.bingzi.magicalglobalmarketpro.bean.Shop
-import vip.bingzi.magicalglobalmarketpro.util.data
-import vip.bingzi.magicalglobalmarketpro.util.logger
-import vip.bingzi.magicalglobalmarketpro.util.toShop
-import vip.bingzi.magicalglobalmarketpro.util.view
+import vip.bingzi.magicalglobalmarketpro.util.*
 import vip.bingzi.magicalglobalmarketpro.view.View
 import java.text.SimpleDateFormat
 import java.util.*
@@ -76,6 +75,31 @@ class OpenView : View {
             // 点击时
             override fun onClick(p0: ClickEvent, p1: Shop) {
                 p0.isCancelled = true
+                val buyPlayer = p0.clicker
+                val fromShop = fromShop(p1)
+                val stringList = data.getStringList("Shop")
+                // 检测当前配置文件中是否还有此物品
+                if (stringList.contains(fromShop)) {
+                    // 扣款是否成功
+                    if (economy!!.take(buyPlayer, p1.price)) {
+                        // 移除该物品
+                        stringList.remove(fromShop)
+                        data.set("Shop", stringList)
+                        data.saveToFile()
+                        val playerEmail = getPlayerEmail(buyPlayer)
+                        if (playerEmail != null) {
+                            playerEmail.addShop(p1)
+                            economy!!.add(Bukkit.getOfflinePlayer(p1.player) as Player, p1.price)
+                        } else {
+                            val email1 = Email(player)
+                            email1.addShop(p1)
+                            email.add(email1)
+                        }
+                    }
+                } else {
+                    logger.fine("玩家 ${buyPlayer.name} 正在尝试购买一个已经被购买的商品,该操作已被取消!")
+                    buyPlayer.sendMessage(asStringColored("Shop.NotShop"))
+                }
             }
 
             // 生成元素所对应的物品

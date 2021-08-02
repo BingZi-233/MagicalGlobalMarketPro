@@ -3,6 +3,8 @@ package vip.bingzi.magicalglobalmarketpro
 import io.izzel.taboolib.loader.Plugin
 import io.izzel.taboolib.module.config.TConfig
 import io.izzel.taboolib.module.inject.TInject
+import vip.bingzi.magicalglobalmarketpro.money.EconomyTaboolibAPI
+import vip.bingzi.magicalglobalmarketpro.util.economy
 
 
 object MagicalGlobalMarketPro : Plugin() {
@@ -22,13 +24,13 @@ object MagicalGlobalMarketPro : Plugin() {
         private set
 
     override fun onLoad() {
+
     }
 
     override fun onEnable() {
-
+        economy = EconomyTaboolibAPI()
     }
 
     override fun onDisable() {
-
     }
 }

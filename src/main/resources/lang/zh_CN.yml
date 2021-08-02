@@ -1,3 +1,5 @@
 Prompt:
-  SellSuccessfully: "出售成功!商品已经上架."
-  TheSaleFailed: "出售失败!请输入数字并点击完成."
+  SellSuccessfully: "&a出售成功!商品已经上架."
+  TheSaleFailed: "&4出售失败!请输入数字并点击完成."
+Shop:
+  NotShop: "&4该物品已经被购买，请选择其他商品进行购买操作!"
