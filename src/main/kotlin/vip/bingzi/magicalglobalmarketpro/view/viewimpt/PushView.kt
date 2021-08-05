@@ -10,7 +10,10 @@ import org.bukkit.inventory.ItemStack
 import vip.bingzi.magicalglobalmarketpro.bean.InventoryToPush
 import vip.bingzi.magicalglobalmarketpro.bean.Shop
 import vip.bingzi.magicalglobalmarketpro.bean.ShopType
-import vip.bingzi.magicalglobalmarketpro.util.*
+import vip.bingzi.magicalglobalmarketpro.util.asStringColored
+import vip.bingzi.magicalglobalmarketpro.util.data
+import vip.bingzi.magicalglobalmarketpro.util.fromShop
+import vip.bingzi.magicalglobalmarketpro.util.view
 import vip.bingzi.magicalglobalmarketpro.view.View
 
 class PushView : View {
@@ -54,7 +57,6 @@ class PushView : View {
                     9, 10, 11, 12, 13, 14, 15, 16, 17,
                     18, 19, 20, 21, 22, 23, 24, 25, 26,
                     27, 28, 29, 30, 31, 32, 33, 34, 35,
-//                    36, 37, 38, 39, 40, 41, 42, 43, 44
                 )
             }
 
@@ -93,6 +95,7 @@ class PushView : View {
                         data.set("Shop", stringList)
                         data.saveToFile()
                         p0.clicker.sendMessage(asStringColored("Prompt.SellSuccessfully"))
+                        startView(player)
                         return@inputSign
                     }
                     p0.clicker.sendMessage(asStringColored("Prompt.TheSaleFailed"))
@@ -121,7 +124,6 @@ class PushView : View {
 
             // 构建结束时
             override fun onBuild(p0: Inventory) {
-                logger.finest(player.name + "的购买页面已经打开")
             }
         }.open()
     }

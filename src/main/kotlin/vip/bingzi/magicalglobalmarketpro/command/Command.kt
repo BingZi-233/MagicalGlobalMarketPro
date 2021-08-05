@@ -6,6 +6,8 @@ import io.izzel.taboolib.module.command.base.BaseSubCommand
 import io.izzel.taboolib.module.command.base.SubCommand
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import vip.bingzi.magicalglobalmarketpro.view.viewimpt.EmailView
+import vip.bingzi.magicalglobalmarketpro.view.viewimpt.MyView
 import vip.bingzi.magicalglobalmarketpro.view.viewimpt.OpenView
 import vip.bingzi.magicalglobalmarketpro.view.viewimpt.PushView
 
@@ -38,6 +40,24 @@ class Command : BaseMainCommand() {
         override fun onCommand(p0: CommandSender, p1: org.bukkit.command.Command, p2: String, p3: Array<out String>) {
             if (p0 is Player) {
                 PushView().startView(p0)
+            }
+        }
+    }
+
+    @SubCommand
+    val email: BaseSubCommand = object : BaseSubCommand() {
+        override fun onCommand(p0: CommandSender, p1: org.bukkit.command.Command, p2: String, p3: Array<out String>) {
+            if (p0 is Player) {
+                EmailView().startView(p0)
+            }
+        }
+    }
+
+    @SubCommand
+    val my: BaseSubCommand = object : BaseSubCommand() {
+        override fun onCommand(p0: CommandSender, p1: org.bukkit.command.Command, p2: String, p3: Array<out String>) {
+            if (p0 is Player) {
+                MyView().startView(p0)
             }
         }
     }

@@ -1,13 +1,13 @@
 package vip.bingzi.magicalglobalmarketpro.view.viewimpt
 
+import io.izzel.taboolib.TabooLibAPI
+import io.izzel.taboolib.util.Features
 import io.izzel.taboolib.util.item.inventory.ClickEvent
 import io.izzel.taboolib.util.item.inventory.linked.MenuLinked
-import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
-import vip.bingzi.magicalglobalmarketpro.bean.Email
 import vip.bingzi.magicalglobalmarketpro.bean.Shop
 import vip.bingzi.magicalglobalmarketpro.util.*
 import vip.bingzi.magicalglobalmarketpro.view.View
@@ -75,30 +75,37 @@ class OpenView : View {
             // 点击时
             override fun onClick(p0: ClickEvent, p1: Shop) {
                 p0.isCancelled = true
-                val buyPlayer = p0.clicker
                 val fromShop = fromShop(p1)
                 val stringList = data.getStringList("Shop")
                 // 检测当前配置文件中是否还有此物品
                 if (stringList.contains(fromShop)) {
-                    // 扣款是否成功
-                    if (economy!!.take(buyPlayer, p1.price)) {
-                        // 移除该物品
-                        stringList.remove(fromShop)
-                        data.set("Shop", stringList)
-                        data.saveToFile()
-                        val playerEmail = getPlayerEmail(buyPlayer)
-                        if (playerEmail != null) {
-                            playerEmail.addShop(p1)
-                            economy!!.add(Bukkit.getOfflinePlayer(p1.player) as Player, p1.price)
+                    Features.inputSign(p0.clicker,
+                        arrayOf("",
+                            "是否确认购买",
+                            "您的余额: ${TabooLibAPI.getPluginBridge().economyLook(player)}",
+                            "数字1确认，其他则取消")) {
+                        val toIntOrNull = it[0].toIntOrNull()
+                        if (toIntOrNull != null && toIntOrNull == 1) {
+                            if (economy!!.take(player, p1.price)) {
+                                stringList.remove(fromShop)
+                                data.set("Shop", stringList)
+                                data.saveToFile()
+                                val playerEmail = getPlayerEmail(player)
+                                playerEmail.addShop(p1)
+                                email.add(playerEmail)
+                                Tools.saveEmail()
+                                Tools.loadEmail()
+                                startView(player)
+                                return@inputSign
+                            }
                         } else {
-                            val email1 = Email(player)
-                            email1.addShop(p1)
-                            email.add(email1)
+                            startView(player)
+                            return@inputSign
                         }
                     }
                 } else {
-                    logger.fine("玩家 ${buyPlayer.name} 正在尝试购买一个已经被购买的商品,该操作已被取消!")
-                    buyPlayer.sendMessage(asStringColored("Shop.NotShop"))
+                    logger.fine("玩家 ${player.name} 正在尝试购买一个已经被购买的商品,该操作已被取消!")
+                    player.sendMessage(asStringColored("Shop.NotShop"))
                 }
             }
 
@@ -133,7 +140,6 @@ class OpenView : View {
 
             // 构建结束时
             override fun onBuild(p0: Inventory) {
-                logger.finest(player.name + "的购买页面已经打开")
             }
         }.open()
     }

@@ -8,7 +8,6 @@ import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import vip.bingzi.magicalglobalmarketpro.bean.Shop
 import vip.bingzi.magicalglobalmarketpro.util.getPlayerEmail
-import vip.bingzi.magicalglobalmarketpro.util.logger
 import vip.bingzi.magicalglobalmarketpro.util.view
 import vip.bingzi.magicalglobalmarketpro.view.View
 import java.text.SimpleDateFormat
@@ -28,15 +27,12 @@ class EmailView : View {
 
             // 所有元素
             override fun getElements(): MutableList<Shop> {
-                if (playerEmail != null) {
-                    return playerEmail.arrayList
-                }
-                return mutableListOf()
+                return playerEmail.arrayList
             }
 
             // 标题
             override fun getTitle(): String {
-                return view.getStringColored("Open.Title")
+                return view.getStringColored("Email.Title")
             }
 
             // 行数
@@ -75,11 +71,9 @@ class EmailView : View {
             // 点击时
             override fun onClick(p0: ClickEvent, p1: Shop) {
                 p0.isCancelled = true
-                if (playerEmail != null) {
-                    playerEmail.removeShop(p1)
-                    p0.inventory.setItem(p0.rawSlot, ItemStack(Material.AIR))
-                    p0.clicker.inventory.addItem(p1.itemStack)
-                }
+                playerEmail.removeShop(p1)
+                p0.inventory.setItem(p0.rawSlot, ItemStack(Material.AIR))
+                p0.clicker.inventory.addItem(p1.itemStack)
             }
 
             // 生成元素所对应的物品
@@ -113,7 +107,6 @@ class EmailView : View {
 
             // 构建结束时
             override fun onBuild(p0: Inventory) {
-                logger.finest(player.name + "的购买页面已经打开")
             }
         }.open()
     }

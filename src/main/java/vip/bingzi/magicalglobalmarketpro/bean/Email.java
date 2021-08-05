@@ -13,6 +13,7 @@ import java.util.List;
  */
 public class Email implements Serializable {
     private String player;
+    private String uuid;
     private ArrayList<Shop> arrayList = new ArrayList<>();
 
     {
@@ -25,6 +26,15 @@ public class Email implements Serializable {
 
     public Email(Player player) {
         this.player = player.getName();
+        this.uuid = player.getUniqueId().toString();
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(Player player) {
+        this.uuid = player.getUniqueId().toString();
     }
 
     public String getPlayer() {
@@ -53,8 +63,7 @@ public class Email implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Email email = (Email) o;
-        if (!getPlayer().equals(email.getPlayer())) return false;
-        return getArrayList().equals(email.getArrayList());
+        return getPlayer().equals(email.getPlayer());
     }
 
     @Override
@@ -71,6 +80,7 @@ public class Email implements Serializable {
      */
     public void addShop(Shop shop) {
         arrayList.add(shop);
+        ToolsKt.getLogger().verbose("玩家 " + player + " 已添加商品! 邮箱内存储物品数量为:" + getSize());
     }
 
     /**

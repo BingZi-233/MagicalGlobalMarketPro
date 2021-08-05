@@ -24,7 +24,6 @@ val view: TConfig = MagicalGlobalMarketPro.view
 val data: TConfig = MagicalGlobalMarketPro.data
 var economy: Economy? = null
 val email: MutableSet<Email> = mutableSetOf()
-val shop: MutableList<Shop> = mutableListOf()
 
 fun toShop(data: String): Shop {
     ByteArrayInputStream(Base64.getDecoder().decode(data)).use { byteArrayInputStream ->
@@ -43,15 +42,50 @@ fun fromShop(shop: Shop): String {
     }
 }
 
+fun toEmail(data: String): Email {
+    ByteArrayInputStream(Base64.getDecoder().decode(data)).use { byteArrayInputStream ->
+        BukkitObjectInputStream(byteArrayInputStream).use { bukkitObjectInputStream ->
+            return bukkitObjectInputStream.readObject() as Email
+        }
+    }
+}
+
+fun fromEmail(email: Email): String {
+    ByteArrayOutputStream().use { byteArrayOutputStream ->
+        BukkitObjectOutputStream(byteArrayOutputStream).use { bukkitObjectOutputStream ->
+            bukkitObjectOutputStream.writeObject(email)
+            return Base64.getEncoder().encodeToString(byteArrayOutputStream.toByteArray())
+        }
+    }
+}
+
 fun asStringColored(string: String): String {
     return TLocale.asString(string).replace("&", "§")
 }
 
-fun getPlayerEmail(player: Player): Email? {
+fun getPlayerEmail(player: Player): Email {
     email.forEach { email ->
-        if (email.player.equals(player)) {
+        if (email.player == player.name) {
             return email
         }
     }
-    return null
+    email.add(Email(player))
+    return getPlayerEmail(player)
+}
+
+object Tools {
+    fun loadEmail() {
+        data.getStringList("Email").forEach {
+            email.add(toEmail(it))
+        }
+    }
+
+    fun saveEmail() {
+        val mutableListOf = mutableListOf<String>()
+        email.forEach {
+            mutableListOf.add(fromEmail(it))
+        }
+        data.set("Email", mutableListOf)
+        data.saveToFile()
+    }
 }
