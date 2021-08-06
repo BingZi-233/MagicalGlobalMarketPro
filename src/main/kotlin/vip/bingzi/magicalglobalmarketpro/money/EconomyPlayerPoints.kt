@@ -3,7 +3,6 @@ package vip.bingzi.magicalglobalmarketpro.money
 import org.black_ixx.playerpoints.PlayerPoints
 import org.black_ixx.playerpoints.PlayerPointsAPI
 import org.bukkit.Bukkit
-import org.bukkit.entity.Player
 import vip.bingzi.magicalglobalmarketpro.util.economy
 import vip.bingzi.magicalglobalmarketpro.util.logger
 
@@ -19,7 +18,8 @@ class EconomyPlayerPoints : Economy() {
     init {
         info = !hookPlayerPoints()
         if (!info) {
-            logger.fine("PlayerPoints已正确载入，相关功能已启用。")
+            logger.fine("PlayerPoints已正确载入，相关功能已启用。但是由于不可抗力，正在载入经济桥...")
+            economy = EconomyTaboolibAPI()
         } else {
             logger.warn("PlayerPoints异常，相关功能已自动禁用。")
             economy = EconomyTaboolibAPI()
@@ -31,9 +31,9 @@ class EconomyPlayerPoints : Economy() {
      * @param player 玩家
      * @param value 点数
      */
-    override fun add(player: Player, value: Double): Boolean {
+    override fun add(player: String, value: Double): Boolean {
         if (info) return false
-        playerPointsAPI.give(player.uniqueId, value.toInt())
+        playerPointsAPI.give(player, value.toInt())
         return true
     }
 
@@ -42,10 +42,10 @@ class EconomyPlayerPoints : Economy() {
      * @param player 玩家
      * @param value 点数
      */
-    override fun take(player: Player, value: Double): Boolean {
+    override fun take(player: String, value: Double): Boolean {
         if (info) return false
-        logger.finest("玩家 ${player.name} 尝试消费 $value 点数, 持有点数为: ${playerPointsAPI.look(player.uniqueId)}")
-        return playerPointsAPI.take(player.uniqueId, value.toInt())
+        logger.finest("玩家 ${player} 尝试消费 $value 点数, 持有点数为: ${playerPointsAPI.look(player)}")
+        return playerPointsAPI.take(player, value.toInt())
     }
 
     /**
@@ -64,7 +64,7 @@ class EconomyPlayerPoints : Economy() {
         return !info
     }
 
-    override fun get(player: Player): Double {
-        return playerPointsAPI.look(player.name).toDouble()
+    override fun get(player: String): Double {
+        return playerPointsAPI.look(player).toDouble()
     }
 }

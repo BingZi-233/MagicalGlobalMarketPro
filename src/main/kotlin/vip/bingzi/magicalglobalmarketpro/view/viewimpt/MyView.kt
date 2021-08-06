@@ -8,6 +8,7 @@ import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import vip.bingzi.magicalglobalmarketpro.bean.Shop
 import vip.bingzi.magicalglobalmarketpro.util.data
+import vip.bingzi.magicalglobalmarketpro.util.getViewItemStack
 import vip.bingzi.magicalglobalmarketpro.util.toShop
 import vip.bingzi.magicalglobalmarketpro.util.view
 import vip.bingzi.magicalglobalmarketpro.view.View
@@ -16,13 +17,22 @@ import java.util.*
 
 class MyView : View {
     override fun startView(player: Player) {
-        val decoration: MutableList<Int> = mutableListOf(45, 46, 47, 49, 51, 52, 53)
+        val decoration: MutableList<Int> = mutableListOf(46, 47, 49, 51)
         object : MenuLinked<Shop>(player) {
             init {
                 // 上一页按钮
                 addButtonPreviousPage(48)
                 // 下一页按钮
                 addButtonNextPage(50)
+                addButton(45) {
+                    MyView().startView(player)
+                }
+                addButton(52) {
+                    EmailView().startView(player)
+                }
+                addButton(53) {
+                    OpenView().startView(player)
+                }
             }
 
             // 所有元素
@@ -61,15 +71,18 @@ class MyView : View {
             // 构建结束时(异步)
             override fun onBuildAsync(p0: Inventory) {
                 if (hasPreviousPage()) {
-                    p0.setItem(48, ItemStack(Material.CHEST))
+                    p0.setItem(48, getViewItemStack("BottomColumn.Up.Start"))
                 } else {
-                    p0.setItem(48, ItemStack(Material.CHEST))
+                    p0.setItem(48, getViewItemStack("BottomColumn.Up.End"))
                 }
                 if (hasNextPage()) {
-                    p0.setItem(50, ItemStack(Material.CHEST))
+                    p0.setItem(50, getViewItemStack("BottomColumn.Down.Start"))
                 } else {
-                    p0.setItem(50, ItemStack(Material.CHEST))
+                    p0.setItem(50, getViewItemStack("BottomColumn.Down.End"))
                 }
+                p0.setItem(45, getViewItemStack("BottomColumn.My"))
+                p0.setItem(52, getViewItemStack("BottomColumn.Email"))
+                p0.setItem(53, getViewItemStack("BottomColumn.Open"))
                 decoration.forEach {
                     p0.setItem(it, ItemStack(Material.WHITE_STAINED_GLASS_PANE))
                 }

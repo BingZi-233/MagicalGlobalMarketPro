@@ -1,11 +1,14 @@
 package vip.bingzi.magicalglobalmarketpro.util
 
+import io.izzel.taboolib.internal.xseries.XMaterial
 import io.izzel.taboolib.loader.PluginBoot
 import io.izzel.taboolib.module.config.TConfig
 import io.izzel.taboolib.module.locale.TLocale
 import io.izzel.taboolib.module.locale.logger.TLogger
 import io.izzel.taboolib.module.locale.logger.TLoggerManager
+import io.izzel.taboolib.util.item.ItemBuilder
 import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
 import org.bukkit.util.io.BukkitObjectInputStream
 import org.bukkit.util.io.BukkitObjectOutputStream
 import vip.bingzi.magicalglobalmarketpro.MagicalGlobalMarketPro
@@ -71,6 +74,15 @@ fun getPlayerEmail(player: Player): Email {
     }
     email.add(Email(player))
     return getPlayerEmail(player)
+}
+
+//BottomColumn.Up.Start
+fun getViewItemStack(string: String): ItemStack {
+    return ItemBuilder(XMaterial.matchXMaterial(view.getStringColored("${string}.display.mats")).get()
+        .parseMaterial()).also {
+        it.name(view.getStringColored("${string}.display.name"))
+        it.lore(view.getStringListColored("${string}.display.lore"))
+    }.build()
 }
 
 object Tools {

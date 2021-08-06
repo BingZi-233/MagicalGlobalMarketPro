@@ -14,6 +14,7 @@ import java.util.List;
 public class Email implements Serializable {
     private String player;
     private String uuid;
+    private double price;
     private ArrayList<Shop> arrayList = new ArrayList<>();
 
     {
@@ -27,6 +28,18 @@ public class Email implements Serializable {
     public Email(Player player) {
         this.player = player.getName();
         this.uuid = player.getUniqueId().toString();
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     public String getUuid() {
@@ -71,6 +84,16 @@ public class Email implements Serializable {
         int result = getPlayer().hashCode();
         result = 31 * result + getArrayList().hashCode();
         return result;
+    }
+
+    /**
+     * 在玩家邮件里面添加金额
+     *
+     * @param price 待添加的数值
+     */
+    public void addPrice(double price) {
+        this.price += price;
+        ToolsKt.getLogger().verbose("已经为 " + player + " 添加金额(" + price + ") 待提取:" + this.price);
     }
 
     /**
